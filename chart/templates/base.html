@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Chart with Django</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="container-fluid"><h4 class="text-center">Django with Charts</h4><hr></div>
+        <div class="container form-container">
+            <div class="row">
+                <div class="col-xl-6 col-12">
+                    <div class="border p-3 shadow">
+                        <h3 class="text-center">Add Data</h3>
+                        <hr>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                {{ form.as_p }}
+                                <button type="submit" class="mt-2 btn btn-success">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-12 country-name-data">
+                    <ul>
+                        <div class="row">
+                            {% for data in data %}
+                                <li class="col-xl-4 col-lg-4 col-md-6 col-12">{{data.country_name}}</li>
+                            {% endfor %}
+                        </div>
+                    </ul>
+                </div>
+            <div class="col-12 chart-container">
+                    <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+    </div>
+
+<style>
+body{
+    background-color: #242526;
+    color: white;
+}
+.chart-container{
+    width: 100%;
+    height: 600px !important;
+    margin-bottom: 50px;
+    margin-top: 10px;
+    background-color: white;
+}
+.form-container{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+canvas{
+    height: 550px !important;
+    width: 100% !important;
+}
+form{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+label{
+    width: 100%;
+}
+input{
+    width: 100%;
+}
+.country-name-data{
+    height: 300px;
+    scroll-behavior: auto;
+    overflow-y: scroll;
+}
+ul{
+    list-style: decimal-leading-zero;
+}
+labels{
+    font-size: 20px !important;
+}
+</style>
+    
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for data in data %} '{{ data.country_name }}', {% endfor %}],
+        datasets: [{
+            label: 'Country Population',
+            data: [{% for data in data %} {{ data.population }}, {% endfor %}],
+            backgroundColor:[
+                'rgba(255, 0, 0, 0.7)',
+                'rgba(0, 255, 0, 0.7)',
+                'rgba(0, 0, 255, 0.7)',
+                'rgba(255, 255, 0, 0.7)',
+                'rgba(255, 0, 255, 0.7)',
+                'rgba(0, 255, 255, 0.7)',
+                'rgba(128, 0, 128, 0.7)',
+                'rgba(255, 165, 0, 0.7)',
+                'rgba(0, 128, 0, 0.7)',
+                'rgba(128, 128, 128, 0.7)',
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+            x: {
+                barThickness: 25,
+                grid: {
+                    display: true,
+                },
+            },
+            y: {
+                grid: {
+                    display: true,
+                },
+                beginAtZero: true
+            },
+        },
+        animation: {
+            duration: 3000,
+        },
+        title: {
+            display: true,
+            text: 'Population Chart',
+            fontSize: 16,
+        },
+        legend: {
+            display: true,
+            position: 'top',
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false,
+        },
+    }
+    });
+
+</script>
+
+
+
+
+</body>
+</html>
